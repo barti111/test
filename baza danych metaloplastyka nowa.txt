@@ -1,0 +1,74 @@
+CREATE TABLE IF NOT EXISTS `klienci` (
+  `ID_klienci` INT NOT NULL,
+  `Nazwa` VARCHAR(600) CHARACTER SET 'utf8' COLLATE 'utf8_polish_ci' NOT NULL,
+  `NIP` VARCHAR(20) NULL,
+  `Adres` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_polish_ci' NOT NULL,
+  `Uwagi` TEXT CHARACTER SET 'utf8' COLLATE 'utf8_polish_ci' NULL,
+  `NIP2` TEXT NULL,
+  PRIMARY KEY (`ID_klienci`),
+  UNIQUE INDEX `ID_UNIQUE` (`ID_klienci` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `wyroby` (
+  `id_wyroby` INT NOT NULL,
+  `id_klienci` INT NOT NULL,
+  `nazwa` VARCHAR(250) CHARACTER SET 'utf8' COLLATE 'utf8_polish_ci' NOT NULL,
+  PRIMARY KEY (`id_wyroby`, `nazwa`),
+  UNIQUE INDEX `id_wyrobu_UNIQUE` (`id_wyroby` ASC),
+  INDEX `fk_wyroby_klienci1_idx` (`id_klienci` ASC),
+  CONSTRAINT `fk_wyroby_klienci1`
+    FOREIGN KEY (`id_klienci`)
+    REFERENCES `mydb`.`klienci` (`ID_klienci`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `ceny` (
+  `id_ceny` INT NOT NULL,
+  `id_wyroby` INT NOT NULL,
+  `cena` DECIMAL(10,2) NOT NULL,
+  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_ceny`),
+  UNIQUE INDEX `id_ceny_UNIQUE` (`id_ceny` ASC),
+  INDEX `fk_ceny_wyroby1_idx` (`id_wyroby` ASC),
+  CONSTRAINT `fk_ceny_wyroby1`
+    FOREIGN KEY (`id_wyroby`)
+    REFERENCES `mydb`.`wyroby` (`id_wyroby`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `kontakty` (
+  `id_kontakty` INT NOT NULL,
+  `id_klienci` INT NOT NULL,
+  `osoba` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_polish_ci' NOT NULL,
+  `tel` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_polish_ci' NOT NULL,
+  `tel_kom` VARCHAR(20) NOT NULL,
+  `tel_2` VARCHAR(20) NOT NULL,
+  `email` VARCHAR(60) CHARACTER SET 'utf8' COLLATE 'utf8_polish_ci' NOT NULL,
+  PRIMARY KEY (`id_kontakty`),
+  UNIQUE INDEX `id_kontakty_UNIQUE` (`id_kontakty` ASC),
+  INDEX `fk_kontakty_klienci_idx` (`id_klienci` ASC),
+  CONSTRAINT `fk_kontakty_klienci`
+    FOREIGN KEY (`id_klienci`)
+    REFERENCES `mydb`.`klienci` (`ID_klienci`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id_users` INT NOT NULL,
+  `user` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `status` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_users`),
+  UNIQUE INDEX `id_users_UNIQUE` (`id_users` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `uprawnienia` (
+  `id_uprawnienia` INT NOT NULL,
+  `typ` VARCHAR(45) NOT NULL,
+  `opsi` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_uprawnienia`),
+  UNIQUE INDEX `id_uprawnienia_UNIQUE` (`id_uprawnienia` ASC))
+ENGINE = InnoDB;
